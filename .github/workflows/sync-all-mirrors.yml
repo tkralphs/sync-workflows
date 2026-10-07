@@ -1,0 +1,72 @@
+name: Sync All Upstream Mirrors
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - upstream: coin-or/CyLP
+            mirror: tkralphs/CyLP
+            upstream_default: master
+            mirror_default: master
+      fail-fast: false  # continue syncing other repos if one fails
+
+    steps:
+      - name: Checkout mirror
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.mirror }}
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/${{ matrix.upstream }}.git || true
+
+      - name: Fetch upstream
+        run: |
+          git fetch upstream --tags
+
+      - name: Sync default branch
+        run: |
+          git checkout ${{ matrix.mirror_default }}
+          git reset --hard upstream/${{ matrix.upstream_default }}
+
+          # Remove upstream workflows, keep none (no sync workflow needed in mirrors)
+          if [ -d .github/workflows ]; then
+            rm -rf .github/workflows
+            git add .github/
+            git diff --staged --quiet || git commit -m "chore: remove upstream workflows after sync"
+          fi
+
+          git push https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ matrix.mirror }} ${{ matrix.mirror_default }} --force
+
+      - name: Sync all branches
+        run: |
+          for branch in $(git branch -r | grep upstream/ | grep -v HEAD | grep -v upstream/${{ matrix.upstream_default }}); do
+            local_branch=${branch#upstream/}
+            git checkout -B $local_branch $branch
+
+            if [ -d .github/workflows ]; then
+              rm -rf .github/workflows
+              git add .github/
+              git diff --staged --quiet || git commit -m "chore: remove upstream workflows from $local_branch"
+            fi
+
+            git push https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ matrix.mirror }} $local_branch --force
+          done
+
+      - name: Sync tags
+        run: |
+          git push https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ matrix.mirror }} --tags --force
