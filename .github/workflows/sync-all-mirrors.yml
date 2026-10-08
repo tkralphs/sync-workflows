@@ -71,14 +71,6 @@ jobs:
             mirror: tkralphs/MibS
             upstream_default: master
             mirror_default: master
-          - upstream: coin-or/cylp-docker
-            mirror: tkralphs/cylp-docker
-            upstream_default: master
-            mirror_default: master
-          - upstream: coin-or/symphony-docker
-            mirror: tkralphs/symphony-docker
-            upstream_default: master
-            mirror_default: master
       fail-fast: false
 
     steps:
