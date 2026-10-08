@@ -1,4 +1,4 @@
-name: Sync All Upstream Mirrors
+name: Sync All Mirrors
 
 on:
   schedule:
@@ -15,7 +15,7 @@ jobs:
             mirror: tkralphs/CyLP
             upstream_default: master
             mirror_default: master
-      fail-fast: false  # continue syncing other repos if one fails
+      fail-fast: false
 
     steps:
       - name: Checkout mirror
@@ -42,14 +42,6 @@ jobs:
         run: |
           git checkout ${{ matrix.mirror_default }}
           git reset --hard upstream/${{ matrix.upstream_default }}
-
-          # Remove upstream workflows, keep none (no sync workflow needed in mirrors)
-          if [ -d .github/workflows ]; then
-            rm -rf .github/workflows
-            git add .github/
-            git diff --staged --quiet || git commit -m "chore: remove upstream workflows after sync"
-          fi
-
           git push https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ matrix.mirror }} ${{ matrix.mirror_default }} --force
 
       - name: Sync all branches
@@ -57,13 +49,6 @@ jobs:
           for branch in $(git branch -r | grep upstream/ | grep -v HEAD | grep -v upstream/${{ matrix.upstream_default }}); do
             local_branch=${branch#upstream/}
             git checkout -B $local_branch $branch
-
-            if [ -d .github/workflows ]; then
-              rm -rf .github/workflows
-              git add .github/
-              git diff --staged --quiet || git commit -m "chore: remove upstream workflows from $local_branch"
-            fi
-
             git push https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ matrix.mirror }} $local_branch --force
           done
 
