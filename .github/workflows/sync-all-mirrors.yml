@@ -15,6 +15,70 @@ jobs:
             mirror: tkralphs/CyLP
             upstream_default: master
             mirror_default: master
+          - upstream: coin-or/BLiMPy
+            mirror: tkralphs/BLiMPy
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/GrUMPy
+            mirror: tkralphs/GrUMPy
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/GiMPy
+            mirror: tkralphs/GiMPy
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/CHiPPS-ALPS
+            mirror: tkralphs/CHiPPS-ALPS
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/CHiPPS-BiCePS
+            mirror: tkralphs/CHiPPS-BiCePS
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/CHiPPS-BLIS
+            mirror: tkralphs/CHiPPS-BLIS
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/Dip
+            mirror: tkralphs/Dip
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/CoinUtils
+            mirror: tkralphs/CoinUtils
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/Osi
+            mirror: tkralphs/Osi
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/Clp
+            mirror: tkralphs/Clp
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/Cgl
+            mirror: tkralphs/Cgl
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/Cbc
+            mirror: tkralphs/Cbc
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/COIN-OR-OptimizationSuite
+            mirror: tkralphs/COIN-OR-OptimizationSuite
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/MibS
+            mirror: tkralphs/MibS
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/cylp-docker
+            mirror: tkralphs/cylp-docker
+            upstream_default: master
+            mirror_default: master
+          - upstream: coin-or/symphony-docker
+            mirror: tkralphs/symphony-docker
+            upstream_default: master
+            mirror_default: master
       fail-fast: false
 
     steps:
